@@ -4,22 +4,22 @@ import { Observable } from 'rxjs';
 
 export interface Employee {
   id: string;
-  employeeId: string;
-  fullName: string;
+  employee_id: string;
+  full_name: string;
   email: string;
   department: string;
-  createdAt: string;
+  created_at: string;
 }
 
 export interface CreateEmployeeDto {
-  employeeId: string;
-  fullName: string;
+  employee_id: string;
+  full_name: string;
   email: string;
   department: string;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EmployeesService {
   private api = inject(ApiService);

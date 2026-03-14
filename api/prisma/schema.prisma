@@ -12,29 +12,29 @@ datasource db {
   provider = "postgresql"
 }
 
-model Employee {
+model employees {
   id          String   @id @default(uuid())
-  employeeId  String   @unique
-  fullName    String
+  employee_id  String   @unique
+  full_name    String
   email       String   @unique
   department  String
-  createdAt   DateTime @default(now())
+  created_at   DateTime @default(now())
 
-  attendance  Attendance[]
+  attendance  attendance[]
 }
 
-model Attendance {
+model attendance {
   id         String   @id @default(uuid())
-  employeeId String
+  employee_id String
   date       DateTime
-  status     AttendanceStatus
+  status     attendance_status
 
-  employee   Employee @relation(fields: [employeeId], references: [id])
+  employee   employees @relation(fields: [employee_id], references: [id])
 
-  @@unique([employeeId, date])
+  @@unique([employee_id, date])
 }
 
-enum AttendanceStatus {
+enum attendance_status {
   PRESENT
   ABSENT
 }

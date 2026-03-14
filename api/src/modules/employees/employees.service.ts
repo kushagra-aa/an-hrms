@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
@@ -13,24 +16,21 @@ export class EmployeesService {
   /**
    * Stub for creating a new employee.
    */
-  async test() {
-    return this.prisma.employee.findMany();
-  }
-  async create(createEmployeeDto: CreateEmployeeDto) {
+  create(createEmployeeDto: CreateEmployeeDto) {
     return { message: 'Employee creation stub', data: createEmployeeDto };
   }
 
   /**
    * Stub for retrieving all employees.
    */
-  async findAll() {
-    return { message: 'Get all employees stub' };
+  findAll() {
+    return this.prisma.employees.findMany();
   }
 
   /**
    * Stub for deleting an employee by ID.
    */
-  async remove(id: string) {
+  remove(id: string) {
     return { message: `Delete employee stub for id ${id}` };
   }
 }
