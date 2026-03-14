@@ -4,16 +4,16 @@ import { Observable } from 'rxjs';
 
 export interface Employee {
   id: string;
-  employee_id: string;
-  full_name: string;
+  employeeId: string;
+  fullName: string;
   email: string;
   department: string;
-  created_at: string;
+  createdAt: string;
 }
 
 export interface CreateEmployeeDto {
-  employee_id: string;
-  full_name: string;
+  employeeId: string;
+  fullName: string;
   email: string;
   department: string;
 }
