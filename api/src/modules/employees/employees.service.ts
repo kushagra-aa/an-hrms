@@ -1,36 +1,76 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { EmployeeResponseDto } from './dto/employee-response.dto';
 
-/**
- * Service handling business logic for employee management.
- * Interacts with the database through Prisma.
- */
 @Injectable()
 export class EmployeesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
-  /**
-   * Stub for creating a new employee.
-   */
-  create(createEmployeeDto: CreateEmployeeDto) {
-    return { message: 'Employee creation stub', data: createEmployeeDto };
+  async findAll(): Promise<EmployeeResponseDto[]> {
+    const employees = await this.prisma.employee.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return employees.map((emp) => ({
+      id: emp.id,
+      employeeId: emp.employeeId,
+      fullName: emp.fullName,
+      email: emp.email,
+      department: emp.department,
+      createdAt: emp.createdAt,
+    }));
   }
 
-  /**
-   * Stub for retrieving all employees.
-   */
-  findAll() {
-    return this.prisma.employees.findMany();
+  async create(dto: CreateEmployeeDto): Promise<EmployeeResponseDto> {
+    // Check if employeeId exists
+    const existingEmployeeId = await this.prisma.employee.findUnique({
+      where: { employeeId: dto.employeeId },
+    });
+
+    if (existingEmployeeId) {
+      throw new ConflictException(`Employee with ID ${dto.employeeId} already exists`);
+    }
+
+    // Check if email exists
+    const existingEmail = await this.prisma.employee.findUnique({
+      where: { email: dto.email },
+    });
+
+    if (existingEmail) {
+      throw new ConflictException(`Employee with email ${dto.email} already exists`);
+    }
+
+    const employee = await this.prisma.employee.create({
+      data: {
+        employeeId: dto.employeeId,
+        fullName: dto.fullName,
+        email: dto.email,
+        department: dto.department,
+      },
+    });
+
+    return {
+      id: employee.id,
+      employeeId: employee.employeeId,
+      fullName: employee.fullName,
+      email: employee.email,
+      department: employee.department,
+      createdAt: employee.createdAt,
+    };
   }
 
-  /**
-   * Stub for deleting an employee by ID.
-   */
-  remove(id: string) {
-    return { message: `Delete employee stub for id ${id}` };
+  async remove(id: string): Promise<void> {
+    const employee = await this.prisma.employee.findUnique({
+      where: { id },
+    });
+
+    if (!employee) {
+      throw new NotFoundException(`Employee with ID ${id} not found`);
+    }
+
+    await this.prisma.employee.delete({
+      where: { id },
+    });
   }
 }
