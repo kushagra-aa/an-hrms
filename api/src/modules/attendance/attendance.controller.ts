@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AttendanceService } from './attendance.service';
 import { CreateAttendanceDto } from './dto/create-attendance.dto';
+import { AttendanceResponseDto } from './dto/attendance-response.dto';
 
 /**
  * Controller for managing attendance records.
@@ -14,7 +15,7 @@ export class AttendanceController {
    * Endpoint to log an attendance record.
    */
   @Post()
-  create(@Body() createAttendanceDto: CreateAttendanceDto) {
+  async create(@Body() createAttendanceDto: CreateAttendanceDto): Promise<AttendanceResponseDto> {
     return this.attendanceService.create(createAttendanceDto);
   }
 
@@ -23,7 +24,7 @@ export class AttendanceController {
    * Endpoint to retrieve attendance history for a specific employee.
    */
   @Get(':employeeId')
-  findByEmployee(@Param('employeeId') employeeId: string) {
+  async findByEmployee(@Param('employeeId') employeeId: string): Promise<AttendanceResponseDto[]> {
     return this.attendanceService.findByEmployee(employeeId);
   }
 }
