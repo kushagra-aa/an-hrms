@@ -25,18 +25,28 @@ import { LucideAngularModule, UserCheck, Calendar, Clock, Users, Activity, Refre
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <!-- Employee Dropdown -->
           <div class="space-y-1.5">
-            <label class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground px-1 flex items-center gap-1.5">
-              <lucide-icon [name]="usersIcon" class="size-3"></lucide-icon>
-              Employee
+            <label class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground px-1 flex items-center justify-between gap-1.5">
+              <span class="flex items-center gap-1.5">
+                <lucide-icon [name]="usersIcon" class="size-3"></lucide-icon>
+                Employee
+              </span>
+              @if (isLoadingEmployees) {
+                <lucide-icon [name]="refreshIcon" class="size-3 animate-spin text-primary"></lucide-icon>
+              }
             </label>
             <select 
               formControlName="employeeId"
-              class="w-full h-10 px-3 rounded-md border bg-background text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all hover:bg-muted/50"
+              class="w-full h-10 px-3 rounded-md border bg-background text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all hover:bg-muted/50 disabled:opacity-50 disabled:cursor-not-allowed"
               (change)="onEmployeeChange()"
+              [attr.disabled]="isLoadingEmployees ? true : null"
             >
-              <option value="">Select Employee</option>
-              @for (emp of employees; track emp.id) {
-                <option [value]="emp.id">{{ emp.fullName }} ({{ emp.employeeId }})</option>
+              @if (isLoadingEmployees) {
+                <option value="">Loading employees...</option>
+              } @else {
+                <option value="">Select Employee</option>
+                @for (emp of employees; track emp.id) {
+                  <option [value]="emp.id">{{ emp.fullName }} ({{ emp.employeeId }})</option>
+                }
               }
             </select>
           </div>
@@ -103,6 +113,7 @@ export class AttendanceFormComponent implements OnInit {
 
   form: FormGroup;
   employees: Employee[] = [];
+  isLoadingEmployees = true;
   
   readonly userCheckIcon = UserCheck;
   readonly calendarIcon = Calendar;
@@ -120,8 +131,14 @@ export class AttendanceFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.employeesService.getAll().subscribe(data => {
-      this.employees = data;
+    this.employeesService.getAll().subscribe({
+      next: (data) => {
+        this.employees = data;
+        this.isLoadingEmployees = false;
+      },
+      error: () => {
+        this.isLoadingEmployees = false;
+      }
     });
   }
 
