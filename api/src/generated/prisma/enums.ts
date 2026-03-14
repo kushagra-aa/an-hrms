@@ -9,9 +9,9 @@
 * 🟢 You can import this file directly.
 */
 
-export const attendance_status = {
+export const AttendanceStatus = {
   PRESENT: 'PRESENT',
   ABSENT: 'ABSENT'
 } as const
 
-export type attendance_status = (typeof attendance_status)[keyof typeof attendance_status]
+export type AttendanceStatus = (typeof AttendanceStatus)[keyof typeof AttendanceStatus]

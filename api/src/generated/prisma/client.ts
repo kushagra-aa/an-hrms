@@ -30,7 +30,7 @@ export * from "./enums"
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
  * // Fetch zero or more Employees
- * const employees = await prisma.employees.findMany()
+ * const employees = await prisma.employee.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -40,12 +40,12 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma }
 
 /**
- * Model employees
+ * Model Employee
  * 
  */
-export type employees = Prisma.employeesModel
+export type Employee = Prisma.EmployeeModel
 /**
- * Model attendance
+ * Model Attendance
  * 
  */
-export type attendance = Prisma.attendanceModel
+export type Attendance = Prisma.AttendanceModel

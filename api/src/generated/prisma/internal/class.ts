@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.5.0",
   "engineVersion": "280c870be64f457428992c43c1f6d557fab6e29e",
   "activeProvider": "postgresql",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Get a free hosted Postgres database in seconds: `npx create-db`\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel employees {\n  id          String   @id @default(uuid())\n  employee_id String   @unique\n  full_name   String\n  email       String   @unique\n  department  String\n  created_at  DateTime @default(now())\n\n  attendance attendance[]\n}\n\nmodel attendance {\n  id          String            @id @default(uuid())\n  employee_id String\n  date        DateTime\n  status      attendance_status\n\n  employee employees @relation(fields: [employee_id], references: [id])\n\n  @@unique([employee_id, date])\n}\n\nenum attendance_status {\n  PRESENT\n  ABSENT\n}\n",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Employee {\n  id         String   @id @default(uuid())\n  employeeId String   @unique @map(\"employee_id\")\n  fullName   String   @map(\"full_name\")\n  email      String   @unique\n  department String\n  createdAt  DateTime @default(now()) @map(\"created_at\")\n\n  attendance Attendance[]\n\n  @@map(\"employees\")\n}\n\nmodel Attendance {\n  id         String           @id @default(uuid())\n  employeeId String           @map(\"employee_id\")\n  date       DateTime         @db.Date\n  status     AttendanceStatus\n\n  employee Employee @relation(fields: [employeeId], references: [id])\n\n  @@unique([employeeId, date])\n  @@map(\"attendance\")\n}\n\nenum AttendanceStatus {\n  PRESENT\n  ABSENT\n\n  @@map(\"attendance_status\")\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -32,9 +32,9 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"employees\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"employee_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"full_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"department\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"attendance\",\"kind\":\"object\",\"type\":\"attendance\",\"relationName\":\"attendanceToemployees\"}],\"dbName\":null},\"attendance\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"employee_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"attendance_status\"},{\"name\":\"employee\",\"kind\":\"object\",\"type\":\"employees\",\"relationName\":\"attendanceToemployees\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Employee\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"employeeId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"employee_id\"},{\"name\":\"fullName\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"full_name\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"department\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"created_at\"},{\"name\":\"attendance\",\"kind\":\"object\",\"type\":\"Attendance\",\"relationName\":\"AttendanceToEmployee\"}],\"dbName\":\"employees\"},\"Attendance\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"employeeId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"employee_id\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"AttendanceStatus\"},{\"name\":\"employee\",\"kind\":\"object\",\"type\":\"Employee\",\"relationName\":\"AttendanceToEmployee\"}],\"dbName\":\"attendance\"}},\"enums\":{},\"types\":{}}")
 config.parameterizationSchema = {
-  strings: JSON.parse("[\"where\",\"orderBy\",\"cursor\",\"employee\",\"attendance\",\"_count\",\"employees.findUnique\",\"employees.findUniqueOrThrow\",\"employees.findFirst\",\"employees.findFirstOrThrow\",\"employees.findMany\",\"data\",\"employees.createOne\",\"employees.createMany\",\"employees.createManyAndReturn\",\"employees.updateOne\",\"employees.updateMany\",\"employees.updateManyAndReturn\",\"create\",\"update\",\"employees.upsertOne\",\"employees.deleteOne\",\"employees.deleteMany\",\"having\",\"_min\",\"_max\",\"employees.groupBy\",\"employees.aggregate\",\"attendance.findUnique\",\"attendance.findUniqueOrThrow\",\"attendance.findFirst\",\"attendance.findFirstOrThrow\",\"attendance.findMany\",\"attendance.createOne\",\"attendance.createMany\",\"attendance.createManyAndReturn\",\"attendance.updateOne\",\"attendance.updateMany\",\"attendance.updateManyAndReturn\",\"attendance.upsertOne\",\"attendance.deleteOne\",\"attendance.deleteMany\",\"attendance.groupBy\",\"attendance.aggregate\",\"AND\",\"OR\",\"NOT\",\"id\",\"employee_id\",\"date\",\"attendance_status\",\"status\",\"equals\",\"in\",\"notIn\",\"not\",\"lt\",\"lte\",\"gt\",\"gte\",\"contains\",\"startsWith\",\"endsWith\",\"full_name\",\"email\",\"department\",\"created_at\",\"every\",\"some\",\"none\",\"employee_id_date\",\"is\",\"isNot\",\"connectOrCreate\",\"upsert\",\"createMany\",\"set\",\"disconnect\",\"delete\",\"connect\",\"updateMany\",\"deleteMany\"]"),
+  strings: JSON.parse("[\"where\",\"orderBy\",\"cursor\",\"employee\",\"attendance\",\"_count\",\"Employee.findUnique\",\"Employee.findUniqueOrThrow\",\"Employee.findFirst\",\"Employee.findFirstOrThrow\",\"Employee.findMany\",\"data\",\"Employee.createOne\",\"Employee.createMany\",\"Employee.createManyAndReturn\",\"Employee.updateOne\",\"Employee.updateMany\",\"Employee.updateManyAndReturn\",\"create\",\"update\",\"Employee.upsertOne\",\"Employee.deleteOne\",\"Employee.deleteMany\",\"having\",\"_min\",\"_max\",\"Employee.groupBy\",\"Employee.aggregate\",\"Attendance.findUnique\",\"Attendance.findUniqueOrThrow\",\"Attendance.findFirst\",\"Attendance.findFirstOrThrow\",\"Attendance.findMany\",\"Attendance.createOne\",\"Attendance.createMany\",\"Attendance.createManyAndReturn\",\"Attendance.updateOne\",\"Attendance.updateMany\",\"Attendance.updateManyAndReturn\",\"Attendance.upsertOne\",\"Attendance.deleteOne\",\"Attendance.deleteMany\",\"Attendance.groupBy\",\"Attendance.aggregate\",\"AND\",\"OR\",\"NOT\",\"id\",\"employeeId\",\"date\",\"AttendanceStatus\",\"status\",\"equals\",\"in\",\"notIn\",\"not\",\"lt\",\"lte\",\"gt\",\"gte\",\"contains\",\"startsWith\",\"endsWith\",\"fullName\",\"email\",\"department\",\"createdAt\",\"every\",\"some\",\"none\",\"employeeId_date\",\"is\",\"isNot\",\"connectOrCreate\",\"upsert\",\"createMany\",\"set\",\"disconnect\",\"delete\",\"connect\",\"updateMany\",\"deleteMany\"]"),
   graph: "aRIgCgQAAEQAICwAAEEAMC0AAAkAEC4AAEEAMC8BAAAAATABAAAAAT8BAEIAIUABAAAAAUEBAEIAIUJAAEMAIQEAAAABACAIAwAASAAgLAAARgAwLQAAAwAQLgAARgAwLwEAQgAhMAEAQgAhMUAAQwAhMwAARzMiAQMAAGMAIAkDAABIACAsAABGADAtAAADABAuAABGADAvAQAAAAEwAQBCACExQABDACEzAABHMyJGAABFACADAAAAAwAgAQAABAAwAgAABQAgAQAAAAMAIAEAAAABACAKBAAARAAgLAAAQQAwLQAACQAQLgAAQQAwLwEAQgAhMAEAQgAhPwEAQgAhQAEAQgAhQQEAQgAhQkAAQwAhAQQAAGIAIAMAAAAJACABAAAKADACAAABACADAAAACQAgAQAACgAwAgAAAQAgAwAAAAkAIAEAAAoAMAIAAAEAIAcEAABhACAvAQAAAAEwAQAAAAE_AQAAAAFAAQAAAAFBAQAAAAFCQAAAAAEBCwAADgAgBi8BAAAAATABAAAAAT8BAAAAAUABAAAAAUEBAAAAAUJAAAAAAQELAAAQADABCwAAEAAwBwQAAFQAIC8BAEwAITABAEwAIT8BAEwAIUABAEwAIUEBAEwAIUJAAE0AIQIAAAABACALAAATACAGLwEATAAhMAEATAAhPwEATAAhQAEATAAhQQEATAAhQkAATQAhAgAAAAkAIAsAABUAIAIAAAAJACALAAAVACADAAAAAQAgEgAADgAgEwAAEwAgAQAAAAEAIAEAAAAJACADBQAAUQAgGAAAUwAgGQAAUgAgCSwAAEAAMC0AABwAEC4AAEAAMC8BADYAITABADYAIT8BADYAIUABADYAIUEBADYAIUJAADcAIQMAAAAJACABAAAbADAXAAAcACADAAAACQAgAQAACgAwAgAAAQAgAQAAAAUAIAEAAAAFACADAAAAAwAgAQAABAAwAgAABQAgAwAAAAMAIAEAAAQAMAIAAAUAIAMAAAADACABAAAEADACAAAFACAFAwAAUAAgLwEAAAABMAEAAAABMUAAAAABMwAAADMCAQsAACQAIAQvAQAAAAEwAQAAAAExQAAAAAEzAAAAMwIBCwAAJgAwAQsAACYAMAUDAABPACAvAQBMACEwAQBMACExQABNACEzAABOMyICAAAABQAgCwAAKQAgBC8BAEwAITABAEwAITFAAE0AITMAAE4zIgIAAAADACALAAArACACAAAAAwAgCwAAKwAgAwAAAAUAIBIAACQAIBMAACkAIAEAAAAFACABAAAAAwAgAwUAAEkAIBgAAEsAIBkAAEoAIAcsAAA1ADAtAAAyABAuAAA1ADAvAQA2ACEwAQA2ACExQAA3ACEzAAA4MyIDAAAAAwAgAQAAMQAwFwAAMgAgAwAAAAMAIAEAAAQAMAIAAAUAIAcsAAA1ADAtAAAyABAuAAA1ADAvAQA2ACEwAQA2ACExQAA3ACEzAAA4MyIOBQAAOgAgGAAAPwAgGQAAPwAgNAEAAAABNQEAAAAENgEAAAAENwEAPgAhOAEAAAABOQEAAAABOgEAAAABOwEAAAABPAEAAAABPQEAAAABPgEAAAABCwUAADoAIBgAAD0AIBkAAD0AIDRAAAAAATVAAAAABDZAAAAABDdAADwAIThAAAAAATlAAAAAATpAAAAAATtAAAAAAQcFAAA6ACAYAAA7ACAZAAA7ACA0AAAAMwI1AAAAMwg2AAAAMwg3AAA5MyIHBQAAOgAgGAAAOwAgGQAAOwAgNAAAADMCNQAAADMINgAAADMINwAAOTMiCDQCAAAAATUCAAAABDYCAAAABDcCADoAITgCAAAAATkCAAAAAToCAAAAATsCAAAAAQQ0AAAAMwI1AAAAMwg2AAAAMwg3AAA7MyILBQAAOgAgGAAAPQAgGQAAPQAgNEAAAAABNUAAAAAENkAAAAAEN0AAPAAhOEAAAAABOUAAAAABOkAAAAABO0AAAAABCDRAAAAAATVAAAAABDZAAAAABDdAAD0AIThAAAAAATlAAAAAATpAAAAAATtAAAAAAQ4FAAA6ACAYAAA_ACAZAAA_ACA0AQAAAAE1AQAAAAQ2AQAAAAQ3AQA-ACE4AQAAAAE5AQAAAAE6AQAAAAE7AQAAAAE8AQAAAAE9AQAAAAE-AQAAAAELNAEAAAABNQEAAAAENgEAAAAENwEAPwAhOAEAAAABOQEAAAABOgEAAAABOwEAAAABPAEAAAABPQEAAAABPgEAAAABCSwAAEAAMC0AABwAEC4AAEAAMC8BADYAITABADYAIT8BADYAIUABADYAIUEBADYAIUJAADcAIQoEAABEACAsAABBADAtAAAJABAuAABBADAvAQBCACEwAQBCACE_AQBCACFAAQBCACFBAQBCACFCQABDACELNAEAAAABNQEAAAAENgEAAAAENwEAPwAhOAEAAAABOQEAAAABOgEAAAABOwEAAAABPAEAAAABPQEAAAABPgEAAAABCDRAAAAAATVAAAAABDZAAAAABDdAAD0AIThAAAAAATlAAAAAATpAAAAAATtAAAAAAQNDAAADACBEAAADACBFAAADACACMAEAAAABMUAAAAABCAMAAEgAICwAAEYAMC0AAAMAEC4AAEYAMC8BAEIAITABAEIAITFAAEMAITMAAEczIgQ0AAAAMwI1AAAAMwg2AAAAMwg3AAA7MyIMBAAARAAgLAAAQQAwLQAACQAQLgAAQQAwLwEAQgAhMAEAQgAhPwEAQgAhQAEAQgAhQQEAQgAhQkAAQwAhRwAACQAgSAAACQAgAAAAAUwBAAAAAQFMQAAAAAEBTAAAADMCBRIAAGUAIBMAAGgAIEkAAGYAIEoAAGcAIE8AAAEAIAMSAABlACBJAABmACBPAAABACAAAAALEgAAVQAwEwAAWgAwSQAAVgAwSgAAVwAwSwAAWAAgTAAAWQAwTQAAWQAwTgAAWQAwTwAAWQAwUAAAWwAwUQAAXAAwAy8BAAAAATFAAAAAATMAAAAzAgIAAAAFACASAABgACADAAAABQAgEgAAYAAgEwAAXwAgAQsAAGQAMAkDAABIACAsAABGADAtAAADABAuAABGADAvAQAAAAEwAQBCACExQABDACEzAABHMyJGAABFACACAAAABQAgCwAAXwAgAgAAAF0AIAsAAF4AIAcsAABcADAtAABdABAuAABcADAvAQBCACEwAQBCACExQABDACEzAABHMyIHLAAAXAAwLQAAXQAQLgAAXAAwLwEAQgAhMAEAQgAhMUAAQwAhMwAARzMiAy8BAEwAITFAAE0AITMAAE4zIgMvAQBMACExQABNACEzAABOMyIDLwEAAAABMUAAAAABMwAAADMCBBIAAFUAMEkAAFYAMEsAAFgAIE8AAFkAMAABBAAAYgAgAy8BAAAAATFAAAAAATMAAAAzAgYvAQAAAAEwAQAAAAE_AQAAAAFAAQAAAAFBAQAAAAFCQAAAAAECAAAAAQAgEgAAZQAgAwAAAAkAIBIAAGUAIBMAAGkAIAgAAAAJACALAABpACAvAQBMACEwAQBMACE_AQBMACFAAQBMACFBAQBMACFCQABNACEGLwEATAAhMAEATAAhPwEATAAhQAEATAAhQQEATAAhQkAATQAhAgQGAgUAAwEDAAEBBAcAAAAAAwUACBgACRkACgAAAAMFAAgYAAkZAAoBAwABAQMAAQMFAA8YABAZABEAAAADBQAPGAAQGQARBgIBBwgBCAsBCQwBCg0BDA8BDREEDhIFDxQBEBYEERcGFBgBFRkBFhoEGh0HGx4LHB8CHSACHiECHyICICMCISUCIicEIygMJCoCJSwEJi0NJy4CKC8CKTAEKjMOKzQS"
 }
 
@@ -71,7 +71,7 @@ export interface PrismaClientConstructor {
    *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
    * })
    * // Fetch zero or more Employees
-   * const employees = await prisma.employees.findMany()
+   * const employees = await prisma.employee.findMany()
    * ```
    * 
    * Read more in our [docs](https://pris.ly/d/client).
@@ -95,7 +95,7 @@ export interface PrismaClientConstructor {
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
  * // Fetch zero or more Employees
- * const employees = await prisma.employees.findMany()
+ * const employees = await prisma.employee.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -189,24 +189,24 @@ export interface PrismaClient<
   }>>
 
       /**
-   * `prisma.employees`: Exposes CRUD operations for the **employees** model.
+   * `prisma.employee`: Exposes CRUD operations for the **Employee** model.
     * Example usage:
     * ```ts
     * // Fetch zero or more Employees
-    * const employees = await prisma.employees.findMany()
+    * const employees = await prisma.employee.findMany()
     * ```
     */
-  get employees(): Prisma.employeesDelegate<ExtArgs, { omit: OmitOpts }>;
+  get employee(): Prisma.EmployeeDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
-   * `prisma.attendance`: Exposes CRUD operations for the **attendance** model.
+   * `prisma.attendance`: Exposes CRUD operations for the **Attendance** model.
     * Example usage:
     * ```ts
     * // Fetch zero or more Attendances
     * const attendances = await prisma.attendance.findMany()
     * ```
     */
-  get attendance(): Prisma.attendanceDelegate<ExtArgs, { omit: OmitOpts }>;
+  get attendance(): Prisma.AttendanceDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {
