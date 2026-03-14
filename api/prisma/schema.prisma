@@ -32,3 +32,8 @@ model Attendance {
 
   @@unique([employeeId, date])
 }
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+}
