@@ -5,14 +5,14 @@ import { EmployeeResponseDto } from './dto/employee-response.dto';
 
 @Injectable()
 export class EmployeesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAll(): Promise<EmployeeResponseDto[]> {
     const employees = await this.prisma.employee.findMany({
       orderBy: { createdAt: 'desc' },
     });
 
-    return employees.map((emp) => ({
+    return employees.map((emp) => new EmployeeResponseDto({
       id: emp.id,
       employeeId: emp.employeeId,
       fullName: emp.fullName,
@@ -50,14 +50,14 @@ export class EmployeesService {
       },
     });
 
-    return {
+    return new EmployeeResponseDto({
       id: employee.id,
       employeeId: employee.employeeId,
       fullName: employee.fullName,
       email: employee.email,
       department: employee.department,
       createdAt: employee.createdAt,
-    };
+    });
   }
 
   async remove(id: string): Promise<void> {

@@ -1,5 +1,5 @@
 import { IsDateString, IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { AttendanceStatus } from '@prisma/client';
+import { AttendanceStatus } from './../../../generated/prisma/client';
 
 /**
  * Data Transfer Object for logging attendance record.

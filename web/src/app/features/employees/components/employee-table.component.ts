@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Employee } from '../employees.service';
 import { ButtonComponent } from '@/shared/components/button/button.component';
-import { CardComponent } from '@/shared/components/card/card.component';
 import { LucideAngularModule, Trash2, Users } from 'lucide-angular';
 
 @Component({

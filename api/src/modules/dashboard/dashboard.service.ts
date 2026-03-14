@@ -2,16 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { DashboardSummaryResponseDto } from './dto/dashboard-summary-response.dto';
 
-/**
- * Service handling dashboard summary calculations.
- */
 @Injectable()
 export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /**
-   * Retrieves summary statistics for the dashboard.
-   */
   async getSummary(): Promise<DashboardSummaryResponseDto> {
     const totalEmployees = await this.prisma.employee.count();
 

@@ -3,20 +3,13 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreateAttendanceDto } from './dto/create-attendance.dto';
 import { AttendanceResponseDto } from './dto/attendance-response.dto';
 
-/**
- * Service handling business logic for attendance management.
- */
 @Injectable()
 export class AttendanceService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /**
-   * Logs an attendance record.
-   */
   async create(createAttendanceDto: CreateAttendanceDto): Promise<AttendanceResponseDto> {
     const { employeeId, date, status } = createAttendanceDto;
 
-    // Verify employee exists
     const employee = await this.prisma.employee.findUnique({
       where: { id: employeeId },
     });
@@ -25,11 +18,9 @@ export class AttendanceService {
       throw new NotFoundException(`Employee with ID ${employeeId} not found`);
     }
 
-    // Parse date to ensure it's a valid Date object (Prisma @db.Date expects this)
     const attendanceDate = new Date(date);
     attendanceDate.setUTCHours(0, 0, 0, 0);
 
-    // Check for duplicate attendance
     const existing = await this.prisma.attendance.findUnique({
       where: {
         employeeId_date: {
@@ -41,7 +32,7 @@ export class AttendanceService {
 
     if (existing) {
       throw new ConflictException(
-        `Attendance record already exists for employee ${employeeId} on ${date}`,
+        `Attendance record already exists for this employee on ${date}`,
       );
     }
 
@@ -61,11 +52,7 @@ export class AttendanceService {
     });
   }
 
-  /**
-   * Retrieves attendance history for a specific employee.
-   */
   async findByEmployee(employeeId: string): Promise<AttendanceResponseDto[]> {
-    // Verify employee exists
     const employee = await this.prisma.employee.findUnique({
       where: { id: employeeId },
     });

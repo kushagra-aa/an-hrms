@@ -5,4 +5,8 @@ export class EmployeeResponseDto {
   email: string;
   department: string;
   createdAt: Date;
+
+  constructor(partial: Partial<EmployeeResponseDto>) {
+    Object.assign(this, partial);
+  }
 }

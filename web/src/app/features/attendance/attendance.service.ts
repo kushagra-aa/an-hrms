@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { ApiService } from 'src/app/core/api.service';
+import { ApiService } from '@/core/api.service';
 import { Observable } from 'rxjs';
 
 export type AttendanceStatus = 'PRESENT' | 'ABSENT';

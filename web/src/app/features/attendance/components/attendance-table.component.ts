@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Attendance } from '../attendance.service';
-import { LucideAngularModule, Calendar, CheckCircle2, XCircle } from 'lucide-angular';
+import { LucideAngularModule, Calendar } from 'lucide-angular';
 
 @Component({
   selector: 'app-attendance-table',
@@ -67,6 +67,4 @@ export class AttendanceTableComponent {
   @Input() history: Attendance[] = [];
 
   readonly calendarIcon = Calendar;
-  readonly checkIcon = CheckCircle2;
-  readonly xIcon = XCircle;
 }

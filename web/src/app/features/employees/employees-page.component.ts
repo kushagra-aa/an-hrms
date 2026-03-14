@@ -4,7 +4,7 @@ import { EmployeesService, Employee, CreateEmployeeDto } from './employees.servi
 import { EmployeeTableComponent } from './components/employee-table.component';
 import { EmployeeFormComponent } from './components/employee-form.component';
 import { ButtonComponent } from '@/shared/components/button/button.component';
-import { LucideAngularModule, UserPlus, RefreshCw, AlertCircle } from 'lucide-angular';
+import { LucideAngularModule, RefreshCw, AlertCircle } from 'lucide-angular';
 import { finalize } from 'rxjs';
 
 @Component({

@@ -1,4 +1,4 @@
-import { AttendanceStatus } from '@prisma/client';
+import { AttendanceStatus } from './../../../generated/prisma/client';
 
 /**
  * Data Transfer Object for attendance responses.

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { AttendanceService, Attendance, CreateAttendanceDto } from './attendance.service';
 import { AttendanceFormComponent } from './components/attendance-form.component';
 import { AttendanceTableComponent } from './components/attendance-table.component';
-import { ButtonComponent } from '@/shared/components/button/button.component';
 import { LucideAngularModule, ClipboardList, AlertCircle, RefreshCw } from 'lucide-angular';
 import { finalize } from 'rxjs';
 
