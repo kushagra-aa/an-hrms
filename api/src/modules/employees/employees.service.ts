@@ -13,6 +13,9 @@ export class EmployeesService {
   /**
    * Stub for creating a new employee.
    */
+  async test() {
+    return this.prisma.employee.findMany();
+  }
   async create(createEmployeeDto: CreateEmployeeDto) {
     return { message: 'Employee creation stub', data: createEmployeeDto };
   }
