@@ -2,9 +2,14 @@
   <header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
     <div class="container flex h-14 items-center px-6">
       <div class="mr-4 flex">
-        <a class="mr-6 flex items-center space-x-2" href="/">
+        <a class="mr-6 flex items-center space-x-2" routerLink="/dashboard">
           <span class="font-bold inline-block">AN-HRMS</span>
         </a>
+        <nav class="flex items-center space-x-6 text-sm font-medium">
+          <a routerLink="/dashboard" routerLinkActive="text-primary" class="transition-colors hover:text-primary/80 text-muted-foreground">Dashboard</a>
+          <a routerLink="/employees" routerLinkActive="text-primary" class="transition-colors hover:text-primary/80 text-muted-foreground">Employees</a>
+          <a routerLink="/attendance" routerLinkActive="text-primary" class="transition-colors hover:text-primary/80 text-muted-foreground">Attendance</a>
+        </nav>
       </div>
     </div>
   </header>
